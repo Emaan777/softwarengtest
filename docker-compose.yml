@@ -1,0 +1,28 @@
+
+services:
+  web:
+    build:
+      context: ./
+    volumes:
+      - .:/src
+    command: npm start  # Replace this if you're using something like supervisor
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql
+    restart: always
+    env_file:
+      - ./.env  # Ensure this file exists with the correct variables
+    ports:
+      - "3308:3306"  # Make sure you're connecting to port 3308
+    volumes:
+      - ./db:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    env_file:
+      - ./.env  # Ensure this file exists with the correct MySQL credentials
+    ports:
+      - "8082:8081"  # Access phpMyAdmin on localhost:8081
